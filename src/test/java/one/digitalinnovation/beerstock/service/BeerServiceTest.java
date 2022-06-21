@@ -71,6 +71,20 @@ public class BeerServiceTest {
 
     }
 
+    @Test
+    void whenAlreadyRegisteredBeerInformedThenAnExceptionSouldBeThrown() throws BeerAlreadyRegisteredException {
+        // given
+        BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer duplicatedBeer =  beerMapper.toModel(expectedBeerDTO);
+
+        // when
+        when(beerRepository.findByName(expectedBeerDTO.getName())).thenReturn(Optional.of(duplicatedBeer));
+
+        // then
+        assertThrows(BeerAlreadyRegisteredException.class, () -> beerService.createBeer(expectedBeerDTO));
+    }
+
+
 //
 //    @Test
 //    void whenDecrementIsCalledThenDecrementBeerStock() throws BeerNotFoundException, BeerStockExceededException {
